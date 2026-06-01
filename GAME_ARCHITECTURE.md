@@ -15,10 +15,12 @@
 5. [DataStore Structure](#datastore-structure)
 6. [UI/UX Wireframes](#uiux-wireframes)
 7. [Folder Structure](#folder-structure)
-8. [Script Breakdown](#script-breakdown)
-9. [Bid Mechanics Deep Dive](#bid-mechanics-deep-dive)
-10. [Item System](#item-system)
-11. [Progression & Rebirths](#progression--rebirths)
+8. [Bid Mechanics Deep Dive](#bid-mechanics-deep-dive)
+9. [Item System](#item-system)
+10. [Progression & Rebirths](#progression--rebirths)
+11. [Complete Car Index](#complete-car-index)
+12. [NPC & Decoration Details](#npc--decoration-details)
+13. [Locker Contents](#locker-contents)
 
 ---
 
@@ -27,7 +29,7 @@
 ### What is Bid A Car?
 A Roblox game where players engage in **bid battles** to win RNG garages containing:
 - **Random Rarity Cars** (Common → Rare → Epic → Legendary → SPEC)
-- **Decorations** (20$ value, 4-50 per garage based on tier)
+- **Decorations** (#1-#N, $20 value each, 4-50 per garage based on tier)
 - **Lockers** (time-locked containers with dice & potions)
 - **NPCs** (from Dice Shop, provide income boosts on conveyors)
 
@@ -40,7 +42,7 @@ Place on Plot → Generate Income → Rebirth → Unlock World 2
 ### Start State
 - **Starting Money:** $700
 - **Starting Conveyors:** 3 (6 spots total on plot)
-- **First Task:** Mini-tutorial → First bid (BEGINNER $200)
+- **First Task:** Mini-tutorial (cursor guides click BID → BEGINNER) → Game starts
 
 ---
 
@@ -48,20 +50,24 @@ Place on Plot → Generate Income → Rebirth → Unlock World 2
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│                    GAME START (New Player)                       │
-└─────────────────────────────┬───────────────────────────────────┘
+│                    GAME START (New Player)                     │
+└─────────────────────────────┬────────────────────────────────┘
                               │
                               ▼
                     ┌──────────────────┐
                     │  Mini Tutorial   │
-                    │   (1 minute)     │
-                    │  Mandatory       │
+                    │ Cursor clicks:   │
+                    │ 1. [BID] button  │
+                    │ 2. [BEGINNER]    │
+                    │ Duration: <1 min │
+                    │ Mandatory        │
                     └────────┬─────────┘
                              │
                              ▼
                     ┌──────────────────┐
                     │  Main Lobby      │
                     │ $700 in pocket   │
+                    │ Physical World   │
                     └────────┬─────────┘
                              │
           ┌──────────────────┼──────────────────┐
@@ -72,43 +78,41 @@ Place on Plot → Generate Income → Rebirth → Unlock World 2
     └────┬─────┘      └──────────┘      └──────────┘
          │
          ▼
-┌────────────────────────────���────────────────────┐
-│  TIER SELECTION (Pop-up Window - Scrollable)     │
-│  Horizontal single row (left ↔ right)            │
-│                                                 │
-│  [BEGINNER] [ADVANCED] [EXPERT] [CHOSEN] [...]  │
-│     $200      $500      $1200    $2500          │
-└────────────┬─────────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│  TIER SELECTION (Pop-up - Horizontal)    │
+│  Scroll left/right for more tiers        │
+│                                          │
+│ [BEGINNER] [ADVANCED] [EXPERT] [CHOSEN] │
+│   $200      $500       $1200    $2500    │
+│                                          │
+│ [TIER 5] (Unlocked after CHOSEN bid)     │
+│   $5000                                  │
+└────────────┬───────────────────────────┘
              │
              ▼ (Teleport to RNG Garage)
 ┌──────────────────────────────────────────┐
-│     RNG GARAGE (Bid Battle Arena)         │
-│     PHYSICALLY ON MAP (First-person POV)  │
+│   RNG GARAGE (Bid Battle Arena)          │
+│   PHYSICALLY ON MAP (First-person POV)   │
 │                                          │
-│  Player ↔ Bot ↔ Bot ↔ Bot                │
-│  (Player on left, Bots in a line)        │
+│   Player + 3 Random Bots (from 6 total)  │
+│   (Standing in line facing the car)      │
 │                                          │
-│         [Car at back with decos]         │
-│  (Colored if owned, Black if locked)    │
+│   RNG GENERATED:                         │
+│   - 1 Car (rarity by tier)               │
+│   - 4-80 Decorations (#1-#N by tier)    │
+│   - 0-2 Lockers (by tier chance)        │
 │                                          │
-│         Current Bid: $500                │
-│      ┌─────────────────────────┐        │
-│      │ Player: $120 ✓          │        │
-│      │ Bot1: $80               │        │
-│      │ Bot2: $100              │        │
-│      └─────────────────────────┘        │
+│   Current Bid Display                    │
+│   Countdown: 2 → 1 → 0                   │
 │                                          │
-│     Countdown: 2 → 1 → 0                │
-│                                          │
-│        [RED BID BUTTON]                 │
-│     [Inventory] [Settings]              │
-└────────────┬─────────────────────────────┘
+│   [BID] Button (10% increment system)   │
+└────────────┬────────────────────────────┘
              │
       ┌──────┴──────┐
       ▼             ▼
-   WIN           LOSS
-    │              │
-    ▼              ▼
+    WIN           LOSS
+     │              │
+     ▼              ▼
 ┌─────────┐   ┌──────────────┐
 │ Selection│   │ Money Refund │
 │ 0-2 Deco │   │ (if no bid)  │
@@ -116,7 +120,7 @@ Place on Plot → Generate Income → Rebirth → Unlock World 2
 │ Lockers  │   │ (if bidded)  │
 └────┬─────┘   └──────────────┘
      │
-     ▼ (Teleport back to Garage)
+     ▼ (Teleport back to Lobby)
 ┌─────────────────────────────┐
 │ Inventory Updated           │
 │ Items, Cars, Lockers        │
@@ -139,9 +143,9 @@ Place on Plot → Generate Income → Rebirth → Unlock World 2
       ┌──────┴──────────┐
       ▼                 ▼
    YES (Rebirth)    NO (Continue)
-    │                 │
-    ▼                 ▼
- LOOP             LOOP
+     │                 │
+     ▼                 ▼
+  LOOP             LOOP
 ```
 
 ---
@@ -213,7 +217,7 @@ DataStoreManager (Foundation - Saves Everything)
 **Stores:**
 ```lua
 players[playerId] = {
-  money = 700, ( or how much he got at that time ) 
+  money = 700,
   rebirths = {
     count = 0,
     timestamp = 0
@@ -264,16 +268,18 @@ players[playerId] = {
 **Flow:**
 ```
 1. Player selects tier → Teleport to RNG Garage
-2. RNG Garage generated (4-7 deco + 1 car etc etc -> check GARAGE TIERS)
-3. Set starting bid price (tier-based)
-4. Start bidding phase (2 sec player, 1 sec bots)
-4.5. Bid raise with only 10% of the live bid value (current bid 300 bid 30$)
-5. Countdown: 2 → 1 → 0
-6. If no bids: auto-end, refund entry
-7. If bids made: Calculate winner (highest bid)
-8. Winner selection phase (0-2 decorations)
-9. Loser handling (money lost)
-10. Teleport back to garage
+2. RNG Garage generated (random car + decorations per tier specs)
+3. 3 random bots selected from 6 available (Bacon, Barbara, Jack, Jeff, Mashallah, Roblofía)
+4. Set starting bid price (tier-based)
+5. Start bidding phase (2 sec player, 1 sec bots)
+6. Bid raise with 10% of CURRENT BID VALUE
+   Example: Current bid $300 → Next raise is $300 * 0.10 = $30 → New bid $330
+7. Countdown: 2 → 1 → 0
+8. If no bids: auto-end, refund entry fee
+9. If bids made: Calculate winner (highest bid)
+10. Winner selection phase (0-2 decorations can be selected)
+11. Loser handling (money lost)
+12. Teleport back to Lobby
 ```
 
 **Key Functions:**
@@ -296,16 +302,18 @@ players[playerId] = {
 - Each bid: random amount within that range
 - Timing: 1 second between bids (not simultaneous)
 - Stop condition: Random stop between 35-65%
+- **BID INCREMENT USES 10% SYSTEM** (same as player)
 
 **Algorithm:**
 ```
-garageValue = CarPrice + (DecoCount * 20) + LocalkerBonus
+garageValue = CarPrice + (DecoCount * 20) + LockerBonus
 minBid = garageValue * 0.35
 maxBid = garageValue * 0.65
 randomStopPoint = Random(minBid, maxBid)
 
 while currentBidAmount < randomStopPoint:
-    currentBidAmount += Random(botMinIncrement, botMaxIncrement)
+    botIncrement = currentBidAmount * 0.10  -- 10% of current bid
+    currentBidAmount += botIncrement
     wait(1 second)
     Bid(currentBidAmount)
     
@@ -322,7 +330,7 @@ while currentBidAmount < randomStopPoint:
 ---
 
 ### 5. **RNGGarageGenerator**
-**Purpose:** Create random garages based on tier
+**Purpose:** Create random garages based on tier (ONE physical location, dynamic generation)
 
 **Tier Specifications:**
 
@@ -332,26 +340,27 @@ while currentBidAmount < randomStopPoint:
 | ADVANCED | $500 | Uncommon-Epic | 7-13 | 1/4 |
 | EXPERT | $1200 | Rare-Legendary + 3% SPEC | 13-21 | 1/2 |
 | CHOSEN | $2500 | Rare-Legendary + 10% SPEC | 21-50 | 1/1 (always) |
-| ------ | $5000 | Epic-Legendary +25% SPEC | 50-80 | 2x 1/1 (always double)  ( UNLOCKED AFTER DOING A CHOSEN BID ) |
+| TIER 5 | $5000 | Epic-Legendary +25% SPEC | 50-80 | 2x 1/1 (always double) |
 
 **CAR RARITIES**
 
-BEGINNER ( common 1/4 | uncommon 1/5 | rare 1/8 )
-ADVANCED ( uncommon 1/8 | rare 1/6 | epic 1/10 )
-EXPERT ( rare 1/10 | epic 1/6 | legendary 1/12 - 3% SPEC INSTEAD OF LEGENDARY )
-CHOSEN ( rare 1/36 | epic 1/24 | legendary 1/8 - 10% SPEC INSTEAD OF LEGENDARY )
------- ( epic 1/24 | legendary 1/8 - 25% SPEC INSTEAD OF LEGENDARY )
+- BEGINNER: common 1/4 | uncommon 1/5 | rare 1/8
+- ADVANCED: uncommon 1/8 | rare 1/6 | epic 1/10
+- EXPERT: rare 1/10 | epic 1/6 | legendary 1/12 (3% SPEC INSTEAD OF LEGENDARY)
+- CHOSEN: rare 1/36 | epic 1/24 | legendary 1/8 (10% SPEC INSTEAD OF LEGENDARY)
+- TIER 5: epic 1/24 | legendary 1/8 (25% SPEC INSTEAD OF LEGENDARY)
 
 **Generation:**
 ```
 1. Roll car rarity based on tier
-2. Roll car model from that rarity pool
+2. Roll car model from that rarity pool (see Complete Car Index)
 3. Roll decoration count (min-max based on tier)
-4. Generate decoration models (all same value $20)
+4. Generate decoration indices (#1, #2, #3... based on count)
 5. Determine if locker drops (based on rate)
-6. If locker: Roll locker rarity (33% equal chance)
-7. Populate locker with contents (see Item System)
-8. Spawn on map in RNG Garage location
+6. If locker: Roll locker rarity (33% equal chance Silver/Gold/Black)
+7. Populate locker with contents (see Locker Contents)
+8. Spawn on map in RNG Garage location (ONE physical location)
+9. Display car + decorations + locker (if any)
 ```
 
 **Key Functions:**
@@ -366,15 +375,14 @@ CHOSEN ( rare 1/36 | epic 1/24 | legendary 1/8 - 10% SPEC INSTEAD OF LEGENDARY )
 
 ### 6. **InventoryManager**
 **Purpose:** Manage all inventory items (Items, Cars, Lockers, Index)
-UI Bid Battles Style cyan-purple
 
 **Structure:**
 ```lua
 inventory[playerId] = {
   -- Items Tab
   items = {
-    { id = "deco_001", name = "Gold Vase", value = 20, rarity = "common" },
-    { id = "deco_002", name = "Plant", value = 20, rarity = "common" },
+    { id = "deco_001", name = "#1", value = 20, rarity = "common" },
+    { id = "deco_002", name = "#2", value = 20, rarity = "common" },
     { id = "potion_luck_001", name = "Luck Boost", duration = 3600, type = "silver" },
     { id = "dice_basic_001", name = "Basic Dice", type = "basic" },
     { id = "locker_001", name = "Silver Locker", rarity = "silver", openedAt = 0, unopened = true }
@@ -382,9 +390,8 @@ inventory[playerId] = {
   
   -- Cars Tab
   cars = {
-    { id = "car_x1", name = "Car X1", rarity = "common", income = 50, owned = true },
-    { id = "car_x5", name = "Car X5", rarity = "uncommon", income = 100, owned = false },
-    { id = "car_epic_01", name = "Epic Car", rarity = "epic", income = 500, owned = true }
+    { id = "car_ford_caisu_001", name = "Ford Caisu", rarity = "common", income = 15, owned = true },
+    { id = "car_mcArren_senior_001", name = "McArren Senior", rarity = "legendary", income = 280, owned = false },
   },
   
   -- Locker Tab
@@ -403,16 +410,25 @@ inventory[playerId] = {
 **UI Tab Structure:**
 
 1. **Items Tab** - Grid layout
-   - Decorations (4 per row, scrollable)
+   - Decorations (numbered #1, #2, etc. - 4 per row, scrollable)
    - Potions (4 per row, scrollable)
    - Dice (4 per row, scrollable)
    - Lockers (separate section)
 
 2. **Cars Tab** - Modern Grid with Rarity Sections
-   - Each car shows: **Image + Name + Income**
-   - If owned: Colored car image + Income value visible
-   - If not owned: Black car image + Lock icon + "???" income
-   - Sorted by rarity
+   - `Common` cars - Full row, 4 cars
+   - `Uncommon` cars - Full row, 4 cars
+   - `Rare` - Full row, 4 cars
+   - `Epic` - Full row, 4 cars
+   - `Legendary` - Full row, 4 cars
+   - `SPEC` - Full row, 4 cars
+   
+   **Each car shows:**
+   - Color image (no background)
+   - Car name
+   - Income $/min
+   - If owned: Colored image + Income visible
+   - If not owned: Black image + Lock icon + "???" income
 
 3. **Locker Tab** - List with time remaining
    - Silver (1 hour) - [OPEN] button if ready
@@ -428,7 +444,7 @@ inventory[playerId] = {
    - All cars in game
    - Owned cars: Colored + Income value
    - Locked cars: Black + Lock icon + "???" income
-   - Sorted by rarity (Common → Uncommon → Rare → Epic → Legendary → SPEC)
+   - Sorted by rarity
 
 **Key Functions:**
 - `GetInventory(playerId)`
@@ -443,8 +459,7 @@ inventory[playerId] = {
 ---
 
 ### 7. **PlotManager**
-**Purpose:** Manage player plot, conveyors, and placements
-PLOT IS ON THE MAP PHISICALLY, i dont need UI for this, backend for place car and npc + decorations on the plot Building phase
+**Purpose:** Manage player plot, conveyors, and placements (Physical on map)
 
 **Plot Structure:**
 ```lua
@@ -460,7 +475,7 @@ plot[playerId] = {
     { id = "conveyor_2", car = nil, npc = nil, income_accumulated = 0, lastCollected = 0 },
     ...
   },
-  totalConveyors = 3,  -- Unlocks at: 3 (free), +1 at Rebirth1, +1 at Rebirth3, +1 at Robux19
+  totalConveyors = 3,
   unlockedCount = 3
 }
 ```
@@ -564,7 +579,7 @@ end
 
 **Mechanics:**
 ```
-1. Player has $2000+ -> click on rebirth button -> Rebirth UI
+1. Player has $2000+ → click on rebirth button → Rebirth UI
 2. Player confirms rebirth
 3. Money set to $0 (lose all)
 4. Rebirth count +1
@@ -588,6 +603,8 @@ end
 **Purpose:** Dice shop where players buy dice for NPC generation
 
 **Shop Interface:**
+Modern smooth UI style (Cyan/Purple theme - Bid Battles aesthetic)
+
 ```
 ┌────────────────────────────────┐
 │         DICE SHOP              │
@@ -595,7 +612,7 @@ end
 │                                │
 │ [BASIC DICE] [GOLDEN DICE]     │
 │ $150         $300              │
-│ [BUY]        [BUY]             │   modern smooth UI style
+│ [BUY]        [BUY]             │
 │                                │
 │ [DIAMOND DICE] [NA-SPEC DICE]  │
 │ $1100        $2500             │
@@ -613,19 +630,22 @@ end
 | Diamond | $1100 | Rare-Legendary | 50-100% | Always |
 | NA-SPEC | $2500 | Rare-SPEC | 50-150% | Rebirth 1+ |
 
-Basic (1/2 common | 1/6 uncommon | 1/10 rare )
-Golden ( 1/4 uncommon | 1/6 rare | 1/10 epic )
-Diamond ( 1/10 rare | 1/6 epic | 1/12 legendary )
-NA-SPEC ( 1/21 rare | 1/16 epic | 1/4 legendary | 1/8 SPEEC )
------------------RNG---------------------
+**RNG Breakdown:**
+- Basic: 1/2 common | 1/6 uncommon | 1/10 rare
+- Golden: 1/4 uncommon | 1/6 rare | 1/10 epic
+- Diamond: 1/10 rare | 1/6 epic | 1/12 legendary
+- NA-SPEC: 1/21 rare | 1/16 epic | 1/4 legendary | 1/8 SPEC
 
 **Flow:**
-0. Player clicks Shop button and get teleported to Merchant where he interact with the NPC ( E ) 
-1. UI opens and player buys dice ($X deducted)
-2. Dice goes to Items → Inventory
-3. Player opens dice → RNG rolls NPC
-4. NPC goes to Items → Inventory
-5. Player places NPC on conveyor
+```
+0. Player clicks Shop button and teleports to Merchant
+1. Player presses E on NPC → DiceShopUI opens
+2. Player buys dice ($X deducted from wallet)
+3. Dice goes to Items → Inventory
+4. Player opens dice → RNG rolls NPC
+5. NPC goes to Items → Inventory
+6. Player places NPC on conveyor
+```
 
 **Key Functions:**
 - `BuyDice(playerId, diceType)`
@@ -699,40 +719,52 @@ end
 ### 13. **UIManager**
 **Purpose:** Central hub for all UI rendering
 
+**UI Screens & Styling:**
+- **Color Theme:** Cyan (#00D4FF) / Purple (#7B2CBF) - Modern Bid Battles aesthetic
+- **Button Colors:**
+  - Events: Purple (#7B2CBF)
+  - Garage: Cyan (#00D4FF)
+  - Shop: Lime Green (#00FF41)
+  - BID: Red (#FF1744) - Large, prominent
+  - Secondary buttons: Dark Blue (#1A1F71)
+
 **UI Screens:**
 
 1. **Main Lobby Screen** - Physical world (not a UI pop-up)
-   - Top-right buttons: [Events] [Garage] [Shop]
+   - Top-right buttons: [Events] (Purple) [Garage] (Cyan) [Shop] (Green)
    - Bottom-right: Wallet display ($700)
    - Bottom-center: [Inventory] [Settings] buttons
    - Settings icon on left side
-   - Merchant NPC visible with "Dice Shop - Open Shop" prompt
+   - Merchant NPC visible with "E - Dice Shop - Open Shop" prompt
    - Garage teleporter visible
+   - All overlaid on 3D world
 
 2. **Tier Selection UI** - Pop-up Window (Scrollable Horizontal)
    - Single horizontal row of bid tiers
    - Scroll left/right to view more tiers
-   - Visible tiers: [BEGINNER $200] [ADVANCED $500] [EXPERT $1200] [CHOSEN $2500] [...5th tier]
+   - Visible tiers: [BEGINNER $200] [ADVANCED $500] [EXPERT $1200] [CHOSEN $2500] [TIER 5 $5000]
    - Click on tier to select and confirm
+   - Modern gradient background (Cyan to Purple)
 
 3. **Bid Battle UI** - Physical World (First-person POV)
-   - Live arena with players and bots physically positioned
+   - Live arena with player + 3 random bots physically positioned
    - Player on left, bots in line facing the car
    - Car at back with decorations displayed
    - Bid status panel showing current bid and all player bids
    - Countdown timer (2 → 1 → 0)
    - Large RED [BID] button at bottom-center
    - [Inventory] and [Settings] buttons accessible
+   - Wallet display visible
 
 4. **Inventory UI** - Pop-up Window
    - **Tabs at top:** [Items] [Cars] [Lockers] [Index]
    - **Cars Tab shows:**
      - Car image (no background, colored if owned, black if locked)
      - Car name
-     - Income value
+     - Income value ($/min)
      - Grid layout, scrollable
    - **Items Tab shows:**
-     - Decorations, Potions, Dice in grid layout
+     - Decorations (#1, #2, #3...), Potions, Dice in grid layout
    - **Lockers Tab shows:**
      - List of lockers with timer/open status
    - **Index Tab shows:**
@@ -813,9 +845,9 @@ end
   "inventory": {
     "items": [
       {
-        "id": "deco_vase_001",
+        "id": "deco_001",
         "type": "decoration",
-        "name": "Gold Vase",
+        "name": "#1",
         "quantity": 1,
         "value": 20,
         "acquiredAt": 1715112000
@@ -847,18 +879,18 @@ end
     
     "cars": [
       {
-        "id": "car_x1_001",
-        "model": "x1",
+        "id": "car_ford_caisu_001",
+        "model": "Ford Caisu",
         "rarity": "common",
-        "income": 50,
+        "income": 15,
         "acquiredAt": 1715107000,
         "onConveyorId": "conveyor_1"
       },
       {
-        "id": "car_x5_001",
-        "model": "x5",
-        "rarity": "uncommon",
-        "income": 100,
+        "id": "car_mcArren_senior_001",
+        "model": "McArren Senior",
+        "rarity": "legendary",
+        "income": 280,
         "acquiredAt": 1715105000,
         "onConveyorId": null
       }
@@ -871,7 +903,7 @@ end
     "conveyors": [
       {
         "id": "conveyor_1",
-        "carId": "car_x1_001",
+        "carId": "car_ford_caisu_001",
         "npcId": "npc_golden_001",
         "incomeAccumulated": 1250,
         "lastCollected": 1715112000
@@ -913,7 +945,7 @@ end
     "totalMoneyEarned": 12500,
     "totalIncomeCollected": 5200,
     "longestWinStreak": 5,
-    "favoriteCarModel": "x1",
+    "favoriteCarModel": "Ford Caisu",
     "favoriteTier": "BEGINNER"
   }
 }
@@ -921,405 +953,164 @@ end
 
 ---
 
-## 🎨 UI/UX WIREFRAMES
+## 📁 NPC & DECORATION DETAILS
 
-### 1. MAIN LOBBY (Physical World + UI Elements)
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ GAME WORLD VIEW (Physical Merchant Area)                         │
-│                                                                  │
-│  [⚙️] (Settings)              [Events] [Garage] [Shop]           │
-│  (Left Side)          (Top-Right Buttons - Purple/Blue/Green)   │
-│                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  Merchant NPC visible with "Dice Shop - Open Shop"      │   │
-│  │  Stall with dice display                                │   │
-│  │  Garage teleporter visible in world                     │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                  │
-│                                                                  │
-│  (Player Free Roam Area)                                        │
-│                                                                  │
-│                                  $700 (Wallet)                  │
-│                                  [Inventory] [Settings]         │
-│                           (Bottom-Center Buttons)               │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
-```
+### Bot Names (6 Available - 3 per Bid)
+When a player enters a bid, 3 bots are **randomly selected** from:
+- Bacon
+- Barbara
+- Jack
+- Jeff
+- Mashallah
+- Roblofía
 
-### 2. TIER SELECTION (Pop-up Window - Horizontal Scrollable)
-```
-┌──────────────────────────────────────────────────────────────┐
-│  SELECT YOUR BID TIER                          [X]            │
-├──────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ◄ [BEGINNER] [ADVANCED] [EXPERT] [CHOSEN] [???] ►         │
-│      $200      $500      $1200    $2500                     │
-│                                                              │
-│              [SCROLL HORIZONTALLY FOR MORE]                 │
-│                                                              │
-│                          [SELECT]  [CANCEL]                 │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
-```
+**Bot Selection:** Each bid instance randomly picks 3 unique bots from the 6 available (probability 1/2 per bot).
 
-### 3. BID INTERFACE (Physical World - First-person POV)
-```
-┌────────────────────────────────────────────────────────────┐
-│ GARAGE AUCTION ARENA                                       │
-│                                                            │
-│  Barbara        Jack        Roblofía        Mashallah  │
-│  (Player)       (Bot 1)     (Bot 2)        (Bot 3)     │
-│  ┌────┐         ┌────┐      ┌────┐        ┌────┐      │
-│  │ 😊 │         │ 🤖 │      │ 🤖 │       │ 🤖 │      │
-│  └────┘         └────┘      └────┘        └────┘      │
-│      ↓              ↓           ↓              ↓        │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │ Current Bid: $500                              │   │
-│  │ Player Bid: $120 ✓                             │   │
-│  │ Bot 1: $80                                     │   │
-│  │ Bot 2: $100                                    │   │
-│  │ Bot 3: $150                                    │   │
-│  └─────────────────────────────────────────────────┘   │
-│                                                        │
-│          ═══════════════════════════════════          │
-│                                                        │
-│               [YELLOW CAR IN BACK]                    │
-│        ✦ Decoration  ✦ Decoration                    │
-│       ✦ Decoration ✦ Decoration                      │
-│                                                        │
-│              Countdown: 2                              │
-│                                                        │
-│  ┌───────────────────────────────────────────────┐   │
-│  │              [RED BID BUTTON]                  │   │
-│  └───────────────────────────────────────────────┘   │
-│                                                        │
-│  [Inventory]    [Settings]    Wallet: $1250         │
-│                                                        │
-└────────────────────────────────────────────────────────┘
-```
+### Decorations
+All decorations are stored in **ReplicatedStorage > Assets > Decorations**
 
-### 4. INVENTORY UI (Pop-up Window)
-```
-┌────────────────────────────────────────────────────────┐
-│ INVENTORY                              [X]              │
-├────────────────────────────────────────────────────────┤
-│ [Items]  [CARS]  [Lockers]  [Index]                   │
-├────────────────────────────────────────────────────────┤
-│                                                        │
-│  Common Cars:                                         │
-│  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐             │
-│  │ 🚗   │  │ 🚗   │  │ 🔒   │  │ 🔒   │             │
-│  │ Car  │  │ Car  │  │ ???  │  │ ???  │             │
-│  │ X1   │  │ X2   │  │ ???  │  │ ???  │             │
-│  │$50   │  │$75   │  │$50   │  │$75   │             │
-│  └──────┘  └──────┘  └──────┘  └──────┘             │
-│                                                        │
-│  Uncommon Cars:                                       │
-│  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐             │
-│  │ 🚗   │  │ 🚗   │  │ 🚗   │  │ 🔒   │             │
-│  │ Car  │  │ Car  │  │ Car  │  │ ???  │             │
-│  │ X5   │  │ X6   │  │ X7   │  │ ???  │             │
-│  │$150  │  │$200  │  │$250  │  │$150  │             │
-│  └──────┘  └──────┘  └──────┘  └──────┘             │
-│                                                        │
-│  [SCROLL DOWN FOR MORE]                              │
-│                                                        │
-└────────────────────────────────────────────────────────┘
-```
-
-### 5. INVENTORY - ITEMS TAB
-```
-┌────────────────────────────────────────────────────────┐
-│ INVENTORY                              [X]              │
-├────────────────────────────────────────────────────────┤
-│ [ITEMS]  [Cars]  [Lockers]  [Index]                   │
-├────────────────────────────────────────────────────────┤
-│                                                        │
-│  DECORATIONS:                                         │
-│  ┌───┐ ┌───┐ ┌───┐ ┌───┐                             │
-│  │ 🏺│ │🌱 │ │💡 │ │🖼 │                             │
-│  │Vase│ │Plant│ │Lamp│ │Painting│                    │
-│  │$20 │ │$20 │ │$20 │ │$20 │                        │
-│  └───┘ └───┘ └───┘ └───┘                             │
-│                                                        │
-│  POTIONS:                                             │
-│  ┌──────────────┐                                     │
-│  │ ✨ Luck Boost│                                     │
-│  │ Silver x2    │ [USE]                               │
-│  └──────────────┘                                     │
-│                                                        │
-│  DICE:                                                │
-│  ┌──────────────┐                                     │
-│  │ 🎲 Basic     │                                     │
-│  │ Dice x1      │ [OPEN]                              │
-│  └──────────────┘                                     │
-│                                                        │
-│  LOCKERS:                                             │
-│  ┌──────────────┐                                     │
-│  │ 🔒 Silver    │                                     │
-│  │ Opens: 0h 15m│ [OPEN-LOCKED]                      │
-│  └──────────────┘                                     │
-│                                                        │
-└────────────────────────────────────────────────────────┘
-```
-
-### 6. INVENTORY - LOCKERS TAB
-```
-┌────────────────────────────────────────────────────────┐
-│ INVENTORY                              [X]              │
-├────────────────────────────────────────────────────────┤
-│ [Items]  [Cars]  [LOCKERS]  [Index]                   │
-├──────────��─────────────────────────────────────────────┤
-│                                                        │
-│  SILVER LOCKERS (1 hour):                             │
-│  ┌──────────────────────────────┐                     │
-│  │ 🔒 Silver Locker #1          │                     │
-│  │ Opens in: 0h 15m 30s         │                     │
-│  │                   [OPEN-LOCKED] │                     │
-│  └──────────────────────────────┘                     │
-│                                                        │
-│  GOLD LOCKERS (4 hours):                              │
-│  ┌──────────────────────────────┐                     │
-│  │ 🔓 Gold Locker #1            │                     │
-│  │ Ready to open!               │                     │
-│  │                   [OPEN-READY]   │                     │
-│  └──────────────────────────────┘                     │
-│                                                        │
-│  BLACK LOCKERS (8 hours):                             │
-│  ┌──────────────────────────────┐                     │
-│  │ 🔒 Black Locker #1           │                     │
-│  │ Opens in: 3h 45m             │                     │
-│  │                   [OPEN-LOCKED] │                     │
-│  └──────────────────────────────┘                     │
-│                                                        │
-└────────────────────────────────────────────────────────┘
-```
-
-### 7. INVENTORY - INDEX TAB
-```
-┌────────────────────────────────────────────────────────┐
-│ INVENTORY                              [X]              │
-├────────────────────────────────────────────────────────┤
-│ [Items]  [Cars]  [Lockers]  [INDEX]                   │
-├─────────────���──────────────────────────────────────────┤
-│                                                        │
-│  COMMON CARS:                                         │
-│  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐             │
-│  │ 🚗   │  │ 🚗   │  │ 🚗   │  │ 🚗   │             │
-│  │ Car X1│ │ Car X2│ │ Car X3│ │ Car X4│            │
-│  │ $50   │  │ $75  │  │ $100  │  │ $125  │           │
-│  └──────┘  └──────┘  └──────┘  └──────┘             │
-│                                                        │
-│  UNCOMMON CARS:                                       │
-│  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐             │
-│  │ 🚗   │  │ 🚗   │  │ 🚗   │  │ 🚗   │             │
-│  │ Car X5│ │ Car X6│ │ Car X7│ │ Car X8│            │
-│  │ $150  │  │ $200 │  │ $250  │  │ $300  │           │
-│  └──────┘  └──────┘  └──────┘  └──────┘             │
-│                                                        │
-│  [SCROLL DOWN FOR RARE/EPIC/LEGENDARY/SPEC]          │
-│                                                        │
-└────────────────────────────────────────────────────────┘
-```
+- **Numbering:** #1, #2, #3, ... #N (no custom names, just numbers)
+- **Value:** $20 each (universal)
+- **Physical Models:** Each number corresponds to a different model in the Decorations folder
+- **Spawning:** RNG garage randomly selects decoration count (4-80 based on tier) and spawns corresponding models
 
 ---
 
-## 📁 FOLDER STRUCTURE
+## 🎁 LOCKER CONTENTS
 
+Lockers are 3 physical objects in **Workspace > Lockers**
+
+### Silver Locker (1 hour open time)
+**Contents (random selection per locker):**
+- 0-1 Dice (random type: Basic/Golden/Diamond)
+- 0-1 Luck Boost Potion (Silver type, 1 hour duration)
+- 1-3 Decorations (random from #1-#N)
+
+**Example locker content:**
 ```
-Workspace/
-├── Camera
-├── Terrain
-├── Conveyor Central
-│   └── Conveyors (x6 physical tents on map)
-│       ├── Conveyor 1 (Part with script)
-│       ├── Conveyor 2
-│       ├── ...
-│       └── Conveyor 6
-│
-├── Events (Teleport button to events)
-├── FencesG (Map decoration)
-├── Folder (Generic folder)
-├── Decorations (Item models)
-│   ├── Vase
-│   ├── Plant
-│   ├── Lamp
-│   └── ...
-│
-├── Map (Main world)
-│   ├── Spawn Area
-│   ├── Lobby
-│   ├── Garages
-│   └── Merchant Area
-│
-├── Bid a Car (World 1) (Main container)
-├── Lockers (Physical locker objects on map x3)
-│   ├── Locker 1 (Part with interact script)
-│   ├── Locker 2
-│   └── Locker 3
-│
-├── GarageRNG (RNG Garage template for bids)
-│   ├── Ground
-│   ├── Display (Car & decoration spawn points)
-│   └── Exit (Teleport back button)
-│
-├── Garages (Storage for garage variants)
-│   ├── Garage200 (BEGINNER template)
-│   ├── Garage500 (ADVANCED template)
-│   ├── Garage1200 (EXPERT template)
-│   └── Garage2500 (CHOSEN template)
-│
-├── Merchant (NPC shop area)
-│   ├── NPC_Merchant (Character model)
-│   └── ShopArea
-│
-├── NPCS (AI Bidders)
-│   ├── BotBidder1 (Humanoid, no name above head initially)
-│   ├── BotBidder2
-│   ├── BotBidder3
-│   ├── BotBidder4
-│   ├── BotBidder5
-│   ├── BotBidder6
-│   └── (More as needed)
-│
-├── ShopNpc (Shop NPC display area)
-│
-├── SpawnLocation (Player spawn)
-│
-├── Players (Cloned on join)
-│   └── [PlayerName]
-│       └── PlayerGui (UI elements)
-│
-├── StarterGui
-│   ├── ScreenGui (Main container)
-│   ├── TierSelectionGui
-│   ├── BidGui
-│   ├── InventoryGui
-│   ├── RebirthGui
-│   ├── TradeGui
-│   ├── PlotGui
-│   └── ShopGui
-│
-├── StarterPack (Tools given at spawn)
-│
-├── StarterPlayer (Character templates)
-│
-├── Lighting
-├── MaterialService
-├── NetworkClient
-├── ReplicatedFirst
-├── ReplicatedStorage
-│   ├── Modules
-│   │   ├── DataStoreManager
-│   │   ├── PlayerDataManager
-│   │   ├── BidEngine
-│   │   ├── NPCBidController
-│   │   ├── RNGGarageGenerator
-│   │   ├── InventoryManager
-│   │   ├── PlotManager
-│   │   ├── IncomeGenerator
-│   │   ├── RebirthManager
-│   │   ├── ShopManager
-│   │   ├── DiceRNG
-│   │   ├── TradeManager
-│   │   ├── UIManager
-│   │   ├── TeleportManager
-│   │   ├── ItemDatabase
-│   │   └── Config
-│   │
-│   ├── Assets
-│   │   ├── CarModels
-│   │   │   ├── Common (x1-x4)
-│   │   │   ├── Uncommon (x5-x8)
-│   │   │   ├── Rare
-│   │   │   ├── Epic
-│   │   │   ├── Legendary
-│   │   │   └── SPEC
-│   │   │
-│   │   ├── Decorations
-│   │   │   ├── Vase
-│   │   │   ├── Plant
-│   │   │   └── ...
-│   │   │
-│   │   └── UI Images
-│   │       ├── CarImages (no background)
-│   │       ├── Icons
-│   │       └── Buttons
-│   │
-│   └── Events
-│       ├── OnPlayerJoin
-│       ├── OnPlayerLeave
-│       ├── OnBidStart
-│       └── OnMoneyChanged
-│
-├── ServerScriptService
-│   ├── Main (Initializes everything)
-│   └── PlayerJoinHandler
-│
-├── ServerStorage
-│   ├── CarDatabase (All car models)
-│   ├── DecorationDatabase
-│   ├── NPCDatabase
-│   └── Templates
-│
-├── SoundService
-├── TextChatService
-└── Teams
+{
+  items: [
+    { type: "dice", diceType: "basic" },
+    { type: "potion", rarity: "silver", duration: 3600 },
+    { type: "decoration", id: "#7" },
+    { type: "decoration", id: "#12" }
+  ]
+}
 ```
+
+### Gold Locker (4 hours open time)
+**Contents (random selection per locker):**
+- 1-2 Dice (random type: Basic/Golden/Diamond)
+- 1 Luck Boost Potion (Gold type, potentially higher boost)
+- 4-6 Decorations (random from #1-#N)
+
+**Example locker content:**
+```
+{
+  items: [
+    { type: "dice", diceType: "golden" },
+    { type: "dice", diceType: "basic" },
+    { type: "potion", rarity: "gold", duration: 14400 },
+    { type: "decoration", id: "#3" },
+    { type: "decoration", id: "#8" },
+    { type: "decoration", id: "#15" },
+    { type: "decoration", id: "#21" },
+    { type: "decoration", id: "#5" }
+  ]
+}
+```
+
+### Black Locker (8 hours open time)
+**Contents (random selection per locker):**
+- 1-4 Dice (random type: Basic/Golden/Diamond/NA-SPEC if available)
+- 1-3 Luck Boost Potions (Gold or higher tier)
+- 1-10 Decorations (random from #1-#N)
+
+**Example locker content:**
+```
+{
+  items: [
+    { type: "dice", diceType: "diamond" },
+    { type: "dice", diceType: "golden" },
+    { type: "dice", diceType: "basic" },
+    { type: "dice", diceType: "golden" },
+    { type: "potion", rarity: "gold", duration: 14400 },
+    { type: "potion", rarity: "gold", duration: 14400 },
+    { type: "decoration", id: "#2" },
+    { type: "decoration", id: "#9" },
+    ... (up to 10 total decorations)
+  ]
+}
+```
+
+**Locker Opening:**
+- Players interact with locker (E key)
+- Confirms cracking the locker
+- Receives contents instantly
+- Locker disappears or resets for next player
+- Items added to inventory
 
 ---
 
-## ✅ IMPLEMENTATION CHECKLIST
+## 🚗 COMPLETE CAR INDEX
 
-### Phase 1: Core Infrastructure
-- [ ] DataStoreManager (Save/Load)
-- [ ] PlayerDataManager (In-memory state)
-- [ ] UIManager (Basic screens)
-- [ ] TeleportManager (Movement)
+### COMMON CARS (Income: 9-20 $/min)
+1. **Ford Caisu** - Income: $15/min
+2. **Telza H** - Income: $9/min
+3. **Viowo B10** - Income: $16/min
+4. **DK Kyoto** - Income: $20/min
 
-### Phase 2: Bid System
-- [ ] BidEngine (State machine)
-- [ ] NPCBidController (AI)
-- [ ] RNGGarageGenerator (Garage creation)
-- [ ] BidUI (Modern interface)
+### UNCOMMON CARS (Income: 20-40 $/min)
+5. **Ford Caisu RZ** - Income: $25/min
+6. **Telza Cubic** - Income: $20/min
+7. **C4 BMX** - Income: $37/min
+8. **Fruity 1012** - Income: $40/min
 
-### Phase 3: Inventory & Items
-- [ ] InventoryManager (Item tracking)
-- [ ] ItemDatabase (All item definitions)
-- [ ] InventoryUI (4 tabs)
-- [ ] Locker system (Time-locked containers)
+### RARE CARS (Income: 40-90 $/min)
+9. **H46 BMX** - Income: $40/min
+10. **Ford J200** - Income: $50/min
+11. **Suru BRS** - Income: $63/min
+12. **Mekke HLS** - Income: $65/min
+13. **Nizmo Silver 14** - Income: $70/min
+14. **Nizmo Silver 15** - Income: $70/min
+15. **Nizmo Silver 13** - Income: $80/min
+16. **Tesnas Square** - Income: $80/min
+17. **Nizmo F35** - Income: $90/min
 
-### Phase 4: Plot & Income
-- [ ] PlotManager (Conveyor system)
-- [ ] IncomeGenerator (Passive money)
-- [ ] Physical plot visualization
+### EPIC CARS (Income: 90-180 $/min)
+18. **Dodota Upper 5** - Income: $120/min
+19. **Jolk L80** - Income: $140/min
+20. **Snakey Burnout** - Income: $155/min
+21. **Fruity Spider** - Income: $168/min
+22. **Nizmo F34** - Income: $170/min
+23. **Mekke Air** - Income: $100/min
+24. **Butti 06** - Income: $180/min
+25. **Labubu Adventures** - Income: $180/min
 
-### Phase 5: Progression
-- [ ] RebirthManager (Milestone system)
-- [ ] ShopManager (Dice shop)
-- [ ] DiceRNG (NPC generation)
+### LEGENDARY CARS (Income: 180-500 $/min)
+26. **McArren Senior** - Income: $280/min
+27. **Butti 106** - Income: $300/min
+28. **Masscar GOP** - Income: $300/min
+29. **Fruity FKX** - Income: $400/min
+30. **Butti 206** - Income: $380/min
+31. **Koeralius F5** - Income: $430/min
+32. **Masscar WRX** - Income: $500/min
 
-### Phase 6: Trading
-- [ ] TradeManager (P2P trading)
-- [ ] TradeUI (Modern interface)
-
-### Phase 7: Polish
-- [ ] UI animations
-- [ ] Sound effects
-- [ ] Tutorial system
-- [ ] Error handling
+### SPEC CARS (Income: 500-2000 $/min)
+33. **G1 Champions** - Income: $1000/min
 
 ---
 
-**Schema Version:** 1.1  
-**Last Updated:** May 29, 2026  
-**Status:** Ready for development
+**Total: 33 cars**
+- 4 Common
+- 4 Uncommon
+- 9 Rare
+- 8 Epic
+- 8 Legendary
+- 1 SPEC
 
-**Recent Changes:**
-- Updated Main Lobby to be physical world with UI buttons (not a pop-up)
-- Changed Tier Selection to horizontal scrollable pop-up with single row
-- Updated Bid Interface to match Bid Battles POV (first-person with players/bots physical positioning)
-- Updated Inventory UI layout to show car images, names, and income only
-- Added Index tab properly to inventory structure
-- Clarified all UI elements match Bid Battles game design
+---
+
+**Schema Version:** 2.0  
+**Last Updated:** June 1, 2026  
+**Status:** Complete - Ready for Backend Implementation
